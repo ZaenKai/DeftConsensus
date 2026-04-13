@@ -1,0 +1,23 @@
+# dependencies
+/node_modules
+
+# next
+/.next
+/out
+
+# production
+/build
+
+# misc
+*.log
+
+# testing
+/coverage
+
+# env
+.env*
+
+# project internals
+/.agents
+/deft
+/vbrief
