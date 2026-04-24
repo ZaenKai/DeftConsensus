@@ -30,7 +30,7 @@ At a system level (current repo), this is a **frontend-first Next.js implementat
 ## Core capabilities (implemented)
 ### 1) Landing and product positioning
 - Marketing/intro landing page at `/`
-- Light/dark/system theme toggle
+- Light/dark theme toggle (dark-default)
 - Modal-based explainer and value proposition sections
 
 ### 2) Dashboard shell for day-to-day operations
@@ -127,9 +127,9 @@ The dashboard and mocks encode a feature status sequence:
 ## Tech stack
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
-- **UI**: React 19 + Tailwind CSS
+- **UI**: React 19 + Tailwind CSS + [`@deftai/deft-components`](https://github.com/deftai/deft-components) (shadcn-based design system)
 - **Testing**: Vitest + Testing Library
-- **UI utilities**: Radix UI primitives (dialog)
+- **Project framework**: [Deft Directive](https://github.com/deftai/directive) v0.20 (vBRIEF document model)
 
 ---
 
@@ -141,16 +141,21 @@ src/
     login/
     page.tsx                # Landing
   components/
+    app/                    # App-wide providers (theme, tooltip, toaster)
     dashboard/              # Shell, explorer, project summary, inbox, settings, admin
     feature-page/           # Brief/chat/voting/subfeature workflows
     landing/                # Public marketing surface
+    theme/                  # ThemeProvider (light/dark, dark-default)
   mocks/
     dashboard.ts            # Dashboard domain fixtures + selectors/helpers
     feature-page.ts         # Collaboration fixtures + governance logic
     landing.ts              # Landing content fixtures
-specs/
-  discussions/              # Decision context artifacts
-  specifications/           # Product specification
+vbrief/
+  specification.vbrief.json # Source of truth for SPECIFICATION.md / PRD.md
+  PROJECT-DEFINITION.vbrief.json # Source of truth for PROJECT.md
+  {proposed,pending,active,completed,cancelled}/ # Scope lifecycle folders
+docs/
+  discussions/              # Historical decision-context artifacts
 ```
 
 ---
@@ -237,9 +242,11 @@ Near-term evolution includes:
 ## Contributing
 Contributions are welcome.
 When contributing:
-- keep feature behavior aligned with `specs/specifications/SPECIFICATION.md`
+- keep feature behavior aligned with `vbrief/specification.vbrief.json` (render with `task spec:render`)
 - preserve mock-driven behavior unless integration scope is explicitly opened
 - include tests for behavior and state handling when possible
+- do not edit `PROJECT.md`, `SPECIFICATION.md`, `PRD.md`, or `ROADMAP.md` by hand — they are auto-generated from `vbrief/` sources
+- run `task check` (or `npm run lint && npm test && npm run build`) before opening a PR
 
 ---
 

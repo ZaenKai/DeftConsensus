@@ -13,9 +13,9 @@
     },
     "metadata": {
       "artifacts": [
-        "specs/discussions/brand-guide-context-run-4.md",
-        "specs/discussions/dashboard-context.md",
-        "specs/discussions/feature-page-context.md"
+        "docs/discussions/brand-guide-context-run-4.md",
+        "docs/discussions/dashboard-context.md",
+        "docs/discussions/feature-page-context.md"
       ]
     },
     "items": [

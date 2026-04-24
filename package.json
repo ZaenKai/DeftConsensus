@@ -33,8 +33,7 @@
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
   },
-  "description": "DeftConsensus is a **Consensus-as-Code** platform: it turns product discussion into structured, reviewable, and trackable delivery decisions before implementation starts.\r Instead of jumping from chat to code with missing context, teams use DeftConsensus to align on scope, rationale, ownership, and verification signals first.",
-  "main": "index.js",
+  "description": "Consensus-as-Code platform for cross-functional delivery alignment. See vbrief/PROJECT-DEFINITION.vbrief.json and README.md for details.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ZaenKai/DeftConsensus.git"

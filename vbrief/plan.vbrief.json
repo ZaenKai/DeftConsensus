@@ -12,12 +12,12 @@
           "name": "discuss",
           "runCount": 6,
           "artifacts": [
-            "specs/discussions/landing-page-context.md",
-            "specs/discussions/landing-page-context-run-2.md",
-            "specs/discussions/landing-page-context-run-3.md",
-            "specs/discussions/brand-guide-context-run-4.md",
-            "specs/discussions/dashboard-context.md",
-            "specs/discussions/feature-page-context.md"
+            "docs/discussions/landing-page-context.md",
+            "docs/discussions/landing-page-context-run-2.md",
+            "docs/discussions/landing-page-context-run-3.md",
+            "docs/discussions/brand-guide-context-run-4.md",
+            "docs/discussions/dashboard-context.md",
+            "docs/discussions/feature-page-context.md"
           ]
         },
         {
@@ -32,12 +32,12 @@
         }
       ],
       "artifacts": [
-        "specs/discussions/landing-page-context.md",
-        "specs/discussions/landing-page-context-run-2.md",
-        "specs/discussions/landing-page-context-run-3.md",
-        "specs/discussions/brand-guide-context-run-4.md",
-        "specs/discussions/dashboard-context.md",
-        "specs/discussions/feature-page-context.md",
+        "docs/discussions/landing-page-context.md",
+        "docs/discussions/landing-page-context-run-2.md",
+        "docs/discussions/landing-page-context-run-3.md",
+        "docs/discussions/brand-guide-context-run-4.md",
+        "docs/discussions/dashboard-context.md",
+        "docs/discussions/feature-page-context.md",
         ".planning/codebase/STACK.md",
         ".planning/codebase/ARCHITECTURE.md",
         ".planning/codebase/CONVENTIONS.md",
