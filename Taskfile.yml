@@ -1,0 +1,9 @@
+version: "3"
+
+# Publishes the deft-directive framework tasks at the project root.
+# See deft/main.md section "Publishing deft tasks in your project root".
+includes:
+  deft:
+    taskfile: ./deft/Taskfile.yml
+    dir: .
+    flatten: true
