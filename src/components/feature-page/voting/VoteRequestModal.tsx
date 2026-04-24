@@ -1,4 +1,16 @@
 import { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  FormField,
+  FormLabel,
+  Textarea,
+} from "@deftai/deft-components";
 import type { BriefSection, FeaturePageUiState } from "@/mocks/feature-page";
 
 type VoteRequestModalProps = {
@@ -9,73 +21,78 @@ type VoteRequestModalProps = {
   onSubmit: (payload: { sectionId: string; rationale: string }) => void;
 };
 
+const selectClassName =
+  "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm text-foreground shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50";
+
 export function VoteRequestModal({ open, sections, uiState, onClose, onSubmit }: VoteRequestModalProps) {
   const [sectionId, setSectionId] = useState(sections[0]?.id ?? "");
   const [rationale, setRationale] = useState("");
 
-  if (!open) {
-    return null;
-  }
-
-  if (uiState === "loading") {
-    return (
-      <div className="surface-card p-4 text-sm text-muted" role="dialog" aria-modal="true" aria-label="Vote request">
-        Loading vote request form…
-      </div>
-    );
-  }
-
-  if (uiState === "error") {
-    return (
-      <div className="surface-card border-danger/40 bg-danger/10 p-4 text-sm text-danger" role="dialog" aria-modal="true">
-        Vote request flow is unavailable right now.
-      </div>
-    );
-  }
-
   return (
-    <div className="surface-card fixed inset-0 z-40 m-auto h-fit max-w-lg p-4" role="dialog" aria-modal="true">
-      <h2 className="font-heading text-lg font-semibold">Propose section vote</h2>
-      <p className="mt-1 text-sm text-muted">Request completion approval for one brief section.</p>
-      <label className="mt-3 block text-xs uppercase tracking-wide text-muted">
-        Section
-        <select
-          className="dashboard-control mt-1 text-sm"
-          value={sectionId}
-          onChange={(event) => setSectionId(event.target.value)}
-        >
-          {sections.map((section) => (
-            <option key={section.id} value={section.id}>
-              {section.title}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="mt-3 block text-xs uppercase tracking-wide text-muted">
-        Rationale
-        <textarea
-          className="dashboard-control mt-1 min-h-24 text-sm"
-          value={rationale}
-          onChange={(event) => setRationale(event.target.value)}
-        />
-      </label>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          className="gradient-button px-3 py-2 text-sm font-semibold"
-          onClick={() => {
-            onSubmit({ sectionId, rationale: rationale.trim() });
-            setRationale("");
-            onClose();
-          }}
-          disabled={!sectionId || rationale.trim().length === 0}
-        >
-          Create vote request
-        </button>
-        <button type="button" className="dashboard-nav-link px-3 py-2 text-sm" onClick={onClose}>
-          Cancel
-        </button>
-      </div>
-    </div>
+    <Dialog open={open} onOpenChange={(next) => (next ? undefined : onClose())}>
+      <DialogContent aria-describedby="vote-request-description">
+        <DialogHeader>
+          <DialogTitle>Propose section vote</DialogTitle>
+          <DialogDescription id="vote-request-description">
+            Request completion approval for one brief section.
+          </DialogDescription>
+        </DialogHeader>
+
+        {uiState === "loading" ? (
+          <p className="text-sm text-muted-foreground">Loading vote request form…</p>
+        ) : uiState === "error" ? (
+          <p className="text-sm text-destructive">Vote request flow is unavailable right now.</p>
+        ) : (
+          <div className="space-y-3">
+            <FormField id="vote-section" className="space-y-1">
+              <FormLabel className="text-xs uppercase tracking-wide">Section</FormLabel>
+              <select
+                id="vote-section"
+                className={selectClassName}
+                value={sectionId}
+                onChange={(event) => setSectionId(event.target.value)}
+              >
+                {sections.map((section) => (
+                  <option key={section.id} value={section.id}>
+                    {section.title}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+
+            <FormField id="vote-rationale" className="space-y-1">
+              <FormLabel className="text-xs uppercase tracking-wide">Rationale</FormLabel>
+              <Textarea
+                id="vote-rationale"
+                className="min-h-24"
+                value={rationale}
+                onChange={(event) => setRationale(event.target.value)}
+              />
+            </FormField>
+          </div>
+        )}
+
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              onSubmit({ sectionId, rationale: rationale.trim() });
+              setRationale("");
+              onClose();
+            }}
+            disabled={
+              uiState === "loading" ||
+              uiState === "error" ||
+              !sectionId ||
+              rationale.trim().length === 0
+            }
+          >
+            Create vote request
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

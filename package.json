@@ -11,7 +11,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.6",
+    "@deftai/deft-components": "^0.2.0",
     "next": "^15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -32,5 +32,18 @@
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
-  }
+  },
+  "description": "DeftConsensus is a **Consensus-as-Code** platform: it turns product discussion into structured, reviewable, and trackable delivery decisions before implementation starts.\r Instead of jumping from chat to code with missing context, teams use DeftConsensus to align on scope, rationale, ownership, and verification signals first.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZaenKai/DeftConsensus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZaenKai/DeftConsensus/issues"
+  },
+  "homepage": "https://github.com/ZaenKai/DeftConsensus#readme"
 }

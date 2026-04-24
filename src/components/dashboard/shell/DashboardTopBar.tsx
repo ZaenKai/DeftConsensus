@@ -2,6 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  Badge,
+  Card,
+  CardContent,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@deftai/deft-components";
 import { MessageIcon, UsersIcon } from "@/components/landing/icons";
 import { dashboardMock, getUnreadInboxCount } from "@/mocks/dashboard";
 import { useDashboardContext } from "./DashboardContext";
@@ -12,21 +23,21 @@ type ParsedFeatureRoute = {
   featureId: string;
 };
 
-const featureStatusAccentClass: Record<string, string> = {
-  Proposed: "border-sky-400/45 bg-sky-500/12 text-sky-700 dark:text-sky-300",
-  "In Discussion": "border-violet-400/45 bg-violet-500/14 text-violet-700 dark:text-violet-300",
-  "Consensus Locked": "border-emerald-400/45 bg-emerald-500/12 text-emerald-700 dark:text-emerald-300",
-  "In Build": "border-indigo-400/45 bg-indigo-500/12 text-indigo-700 dark:text-indigo-300",
-  "In Verification": "border-amber-400/55 bg-amber-500/14 text-amber-700 dark:text-amber-300",
-  Blocked: "border-rose-400/55 bg-rose-500/14 text-rose-700 dark:text-rose-300",
-  Done: "border-teal-400/45 bg-teal-500/12 text-teal-700 dark:text-teal-300",
+type BadgeVariant = React.ComponentProps<typeof Badge>["variant"];
+
+const featureStatusVariant: Record<string, BadgeVariant> = {
+  Proposed: "info",
+  "In Discussion": "accent",
+  "Consensus Locked": "success",
+  "In Build": "info",
+  "In Verification": "warning",
+  Blocked: "destructive",
+  Done: "success",
 };
 
-function getStatusChipClass(status?: string): string {
-  if (!status) {
-    return "";
-  }
-  return featureStatusAccentClass[status] ?? "border-primary/45 bg-primary/12 text-primary";
+function getStatusVariant(status?: string): BadgeVariant {
+  if (!status) return "outline";
+  return featureStatusVariant[status] ?? "outline";
 }
 
 function parseFeatureRoute(pathname: string): ParsedFeatureRoute | null {
@@ -100,159 +111,184 @@ export function DashboardTopBar() {
 
   return (
     <header className="sticky top-2 z-20">
-      <div className="dashboard-panel px-3 py-2 sm:px-4 lg:px-5">
-        <div className="flex flex-wrap items-start justify-between gap-2.5">
-          <div className="min-w-0 flex-1 space-y-1.5">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="dashboard-chip">{isFeatureRoute ? "Feature context" : "Active context"}</span>
-              {isFeatureRoute && routeProject && routeFeature ? (
-                <nav aria-label="Feature route breadcrumb" className="min-w-0">
-                  <ol className="flex flex-wrap items-center gap-1 text-[11px] text-muted">
-                    <li>
-                      <Link
-                        href="/dashboard"
-                        className="font-medium text-primary hover:underline"
-                        onClick={() => {
-                          if (routeCompany?.id) {
-                            setSelectedCompanyId(routeCompany.id);
-                          }
-                        }}
-                      >
-                        {routeCompany?.name ?? "Company"}
-                      </Link>
-                    </li>
-                    <li aria-hidden>/</li>
-                    <li>
-                      <Link
-                        href={`/projects/${routeProject.id}`}
-                        className="font-medium text-primary hover:underline"
-                        onClick={() => {
-                          setSelectedCompanyId(routeProject.companyId);
-                        }}
-                      >
-                        {routeProject.name}
-                      </Link>
-                    </li>
-                    <li aria-hidden>/</li>
-                    <li className="truncate">{routeFeature.name}</li>
-                  </ol>
-                </nav>
-              ) : (
-                <p className="truncate text-[11px] text-muted">{contextLabel}</p>
-              )}
-            </div>
-            <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-              <h1 className="max-w-[42rem] truncate font-heading text-lg font-semibold tracking-tight sm:text-xl">
-                {headingLabel}
-              </h1>
-              {featureStatusLabel ? (
-                <span className={`dashboard-chip ${getStatusChipClass(featureStatusLabel)}`}>{featureStatusLabel}</span>
-              ) : null}
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center justify-end gap-1.5">
-            <details className="relative">
-              <summary className="dashboard-nav-link flex h-8 min-h-0 list-none cursor-pointer items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium marker:content-['']">
-                <MessageIcon className="h-3.5 w-3.5 text-primary" />
-                Notifications
-                {unreadCount > 0 ? (
-                  <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] text-white">
-                    {unreadCount}
-                  </span>
-                ) : null}
-              </summary>
-              <div className="absolute right-0 z-30 mt-2 w-80 rounded-neu border border-surfaceEdge/70 bg-surface/95 p-3 shadow-neu backdrop-blur-md">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted">Quick triage</p>
-                {scopedEvents.length === 0 ? (
-                  <p className="text-sm text-muted">No notifications for this company.</p>
-                ) : (
-                  <ul className="space-y-2">
-                    {scopedEvents.slice(0, 5).map((event) => (
-                      <li key={event.id} className="dashboard-subcard p-2.5">
-                        <Link href={event.href} className="block text-sm font-medium text-text hover:text-primary">
-                          {event.title}
+      <Card className="px-3 py-2 sm:px-4 lg:px-5">
+        <CardContent className="p-0">
+          <div className="flex flex-wrap items-start justify-between gap-2.5">
+            <div className="min-w-0 flex-1 space-y-1.5">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <Badge variant="outline">
+                  {isFeatureRoute ? "Feature context" : "Active context"}
+                </Badge>
+                {isFeatureRoute && routeProject && routeFeature ? (
+                  <nav aria-label="Feature route breadcrumb" className="min-w-0">
+                    <ol className="flex flex-wrap items-center gap-1 text-[11px] text-muted-foreground">
+                      <li>
+                        <Link
+                          href="/dashboard"
+                          className="font-medium text-accent hover:underline"
+                          onClick={() => {
+                            if (routeCompany?.id) {
+                              setSelectedCompanyId(routeCompany.id);
+                            }
+                          }}
+                        >
+                          {routeCompany?.name ?? "Company"}
                         </Link>
-                        <p className="mt-1 text-xs text-muted">{event.threadPreview}</p>
-                        <div className="mt-2 flex items-center justify-between">
-                          <span className="text-[11px] uppercase tracking-wide text-muted">
-                            {event.unread ? "Unread" : "Seen"}
-                          </span>
-                          {event.unread ? (
-                            <button
-                              type="button"
-                              className="text-xs font-semibold text-primary"
-                              onClick={() => markInboxEventRead(event.id)}
-                            >
-                              Mark read
-                            </button>
-                          ) : null}
-                        </div>
                       </li>
-                    ))}
-                  </ul>
+                      <li aria-hidden>/</li>
+                      <li>
+                        <Link
+                          href={`/projects/${routeProject.id}`}
+                          className="font-medium text-accent hover:underline"
+                          onClick={() => {
+                            setSelectedCompanyId(routeProject.companyId);
+                          }}
+                        >
+                          {routeProject.name}
+                        </Link>
+                      </li>
+                      <li aria-hidden>/</li>
+                      <li className="truncate">{routeFeature.name}</li>
+                    </ol>
+                  </nav>
+                ) : (
+                  <p className="truncate text-[11px] text-muted-foreground">{contextLabel}</p>
                 )}
-                <Link href="/inbox" className="mt-3 inline-flex text-sm font-semibold text-primary">
-                  Open full inbox
-                </Link>
               </div>
-            </details>
+              <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+                <h1 className="max-w-[42rem] truncate text-lg font-semibold tracking-tight sm:text-xl">
+                  {headingLabel}
+                </h1>
+                {featureStatusLabel ? (
+                  <Badge variant={getStatusVariant(featureStatusLabel)}>{featureStatusLabel}</Badge>
+                ) : null}
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center justify-end gap-1.5">
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-card px-2 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-accent/20 hover:text-foreground"
+                >
+                  <MessageIcon className="h-3.5 w-3.5" />
+                  Notifications
+                  {unreadCount > 0 ? (
+                    <Badge variant="accent" size="sm" className="ml-1 min-w-5 justify-center">
+                      {unreadCount}
+                    </Badge>
+                  ) : null}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-80">
+                  <DropdownMenuLabel>Quick triage</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {scopedEvents.length === 0 ? (
+                    <div className="p-3 text-sm text-muted-foreground">
+                      No notifications for this company.
+                    </div>
+                  ) : (
+                    scopedEvents.slice(0, 5).map((event) => (
+                      <DropdownMenuItem key={event.id} asChild className="flex-col items-start gap-1">
+                        <Link href={event.href} className="w-full">
+                          <span className="block text-sm font-medium">{event.title}</span>
+                          <span className="block text-xs text-muted-foreground">
+                            {event.threadPreview}
+                          </span>
+                          <span className="mt-1 flex w-full items-center justify-between">
+                            <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                              {event.unread ? "Unread" : "Seen"}
+                            </span>
+                            {event.unread ? (
+                              <button
+                                type="button"
+                                className="text-xs font-semibold text-accent"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  markInboxEventRead(event.id);
+                                }}
+                              >
+                                Mark read
+                              </button>
+                            ) : null}
+                          </span>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/inbox" className="w-full text-sm font-semibold">
+                      Open full inbox
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            <details className="relative">
-              <summary className="dashboard-nav-link flex h-8 min-h-0 list-none cursor-pointer items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium marker:content-['']">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary">
-                  {user.avatarInitials}
-                </span>
-                <span className="hidden sm:inline">{user.name}</span>
-                <UsersIcon className="h-3.5 w-3.5 text-primary" />
-              </summary>
-              <div className="absolute right-0 z-30 mt-2 w-72 rounded-neu border border-surfaceEdge/70 bg-surface/95 p-3 shadow-neu backdrop-blur-md">
-                <p className="text-sm font-semibold">{user.name}</p>
-                <p className="text-xs text-muted">{user.email}</p>
-                <p className="mt-1 text-xs text-muted">{user.title}</p>
-                <Link href="/settings/profile" className="mt-3 inline-flex text-sm font-semibold text-primary">
-                  Open profile settings
-                </Link>
-              </div>
-            </details>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-card px-2 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-accent/20 hover:text-foreground"
+                >
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-accent/20 text-[10px] font-bold text-accent">
+                    {user.avatarInitials}
+                  </span>
+                  <span className="hidden sm:inline">{user.name}</span>
+                  <UsersIcon className="h-3.5 w-3.5" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-72">
+                  <DropdownMenuLabel>
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-semibold">{user.name}</p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                      <p className="text-xs text-muted-foreground">{user.title}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings/profile" className="w-full text-sm font-semibold">
+                      Open profile settings
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-        </div>
-        {!isFeatureRoute ? (
-          <div className="mt-2 grid gap-1.5 sm:max-w-3xl sm:grid-cols-2">
-            <label className="space-y-1 text-[11px] uppercase tracking-wide text-muted">
-              Company
-              <select
-                id="topbar-company-switcher"
-                className="dashboard-control h-9 min-h-0 text-sm normal-case tracking-normal"
-                value={selectedCompanyId}
-                onChange={(event) => setSelectedCompanyId(event.target.value)}
-                aria-label="Company"
-              >
-                {companies.map((company) => (
-                  <option key={company.id} value={company.id}>
-                    {company.name} ({company.membershipRole})
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="space-y-1 text-[11px] uppercase tracking-wide text-muted">
-              Project
-              <select
-                id="topbar-project-switcher"
-                className="dashboard-control h-9 min-h-0 text-sm normal-case tracking-normal"
-                value={selectedProjectId}
-                onChange={(event) => setSelectedProjectId(event.target.value)}
-                aria-label="Project"
-              >
-                {availableProjects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        ) : null}
-      </div>
+          {!isFeatureRoute ? (
+            <div className="mt-2 grid gap-1.5 sm:max-w-3xl sm:grid-cols-2">
+              <label className="space-y-1 text-[11px] uppercase tracking-wide text-muted-foreground">
+                Company
+                <select
+                  id="topbar-company-switcher"
+                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm normal-case tracking-normal text-foreground shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
+                  value={selectedCompanyId}
+                  onChange={(event) => setSelectedCompanyId(event.target.value)}
+                  aria-label="Company"
+                >
+                  {companies.map((company) => (
+                    <option key={company.id} value={company.id}>
+                      {company.name} ({company.membershipRole})
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="space-y-1 text-[11px] uppercase tracking-wide text-muted-foreground">
+                Project
+                <select
+                  id="topbar-project-switcher"
+                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm normal-case tracking-normal text-foreground shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
+                  value={selectedProjectId}
+                  onChange={(event) => setSelectedProjectId(event.target.value)}
+                  aria-label="Project"
+                >
+                  {availableProjects.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          ) : null}
+        </CardContent>
+      </Card>
     </header>
   );
 }

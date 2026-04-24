@@ -4,7 +4,7 @@ import { DashboardTopBar } from "./DashboardTopBar";
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="dashboard-page min-h-screen text-text">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto w-full max-w-[1760px] px-2 pb-6 pt-2 sm:px-4 lg:px-6 lg:pt-3">
         <div className="lg:grid lg:grid-cols-[18.5rem_minmax(0,1fr)] lg:gap-4">
           <DashboardSidebar />

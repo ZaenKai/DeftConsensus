@@ -1,32 +1,78 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * Tailwind config wired to the shadcn-style HSL CSS variables supplied by
+ * `@deftai/deft-components/styles.css`. Dark is the default theme (library
+ * puts its palette on `:root`); light is opted into via `html.light` in
+ * `src/app/globals.css`.
+ */
 const config: Config = {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  darkMode: "class",
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@deftai/deft-components/dist/**/*.{js,cjs,mjs}",
+  ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
-        bg: "var(--color-bg)",
-        text: "var(--color-text)",
-        surface: "var(--color-surface)",
-        surfaceEdge: "var(--color-surface-edge)",
-        primary: "var(--color-primary)",
-        secondary: "var(--color-secondary)",
-        accent: "var(--color-accent)",
-        success: "var(--color-success)",
-        danger: "var(--color-danger)",
-        muted: "var(--color-muted)",
-      },
-      fontFamily: {
-        heading: ["var(--font-plus-jakarta-sans)"],
-        body: ["var(--font-inter)"],
-      },
-      boxShadow: {
-        neu: "0 24px 55px -30px rgba(83, 58, 214, 0.65), 0 14px 32px -24px rgba(0, 145, 255, 0.55)",
-        "neu-inset": "inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(102, 71, 240, 0.25)",
-        soft: "0 10px 30px -22px rgba(15, 23, 42, 0.35)",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
+        },
+        error: "hsl(var(--error))",
       },
       borderRadius: {
-        neu: "18px",
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
     },
   },

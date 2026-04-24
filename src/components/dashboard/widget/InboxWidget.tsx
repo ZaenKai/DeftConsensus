@@ -3,6 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import {
+  Badge,
+  Button,
+  FormField,
+  FormLabel,
+  Input,
+  ScrollArea,
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@deftai/deft-components";
 import { MessageIcon } from "@/components/landing/icons";
 import { getUnreadInboxCount } from "@/mocks/dashboard";
 import { useDashboardContext } from "../shell/DashboardContext";
@@ -45,86 +59,92 @@ export function InboxWidget() {
   }
 
   return (
-    <div className={`fixed bottom-5 right-4 z-40 ${isOpen ? "w-[calc(100vw-2rem)] max-w-sm" : ""}`}>
-      {!isOpen ? (
+    <Sheet open={isOpen} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
         <button
           type="button"
-          className="gradient-button relative inline-flex h-12 w-12 items-center justify-center rounded-full shadow-neu"
-          onClick={() => setOpen(true)}
+          className="fixed bottom-5 right-4 z-40 inline-flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-lg transition-colors hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           aria-label="Open inbox widget"
         >
           <MessageIcon className="h-5 w-5" />
           {unreadCount > 0 ? (
-            <span className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full border border-primary/25 bg-white px-1.5 text-[10px] font-semibold text-primary shadow-sm">
+            <Badge
+              variant="destructive"
+              size="sm"
+              className="absolute -right-1 -top-1 min-w-5 justify-center"
+            >
               {unreadCount}
-            </span>
+            </Badge>
           ) : null}
         </button>
-      ) : (
-        <section className="dashboard-panel space-y-3 p-4" aria-label="Inbox quick triage widget">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading text-base font-semibold">Quick Inbox</h2>
-            <button type="button" className="text-sm text-muted hover:text-text" onClick={() => setOpen(false)}>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-full max-w-sm" aria-label="Inbox quick triage widget">
+        <SheetHeader className="flex flex-row items-center justify-between">
+          <SheetTitle>Quick Inbox</SheetTitle>
+          <SheetClose asChild>
+            <Button variant="ghost" size="sm">
               Minimize
-            </button>
-          </div>
+            </Button>
+          </SheetClose>
+        </SheetHeader>
 
-          <div className="max-h-44 space-y-2 overflow-y-auto pr-1">
+        <ScrollArea className="max-h-44 pr-1">
+          <div className="space-y-2">
             {scopedThreads.length === 0 ? (
-              <p className="text-sm text-muted">No recent threads.</p>
+              <p className="text-sm text-muted-foreground">No recent threads.</p>
             ) : (
-              scopedThreads.map((thread) => (
-                <button
-                  key={thread.id}
-                  type="button"
-                  className={`dashboard-nav-link w-full px-3 py-2 text-left text-sm ${
-                    thread.id === activeThreadId
-                      ? "border-primary/45 bg-primary/12 text-text"
-                      : "text-muted"
-                  }`}
-                  onClick={() => setActiveThreadId(thread.id)}
-                >
-                  <p className="font-medium text-text">{thread.subject}</p>
-                  <p className="line-clamp-1 text-xs text-muted">{thread.lastMessage}</p>
-                </button>
-              ))
+              scopedThreads.map((thread) => {
+                const active = thread.id === activeThreadId;
+                return (
+                  <button
+                    key={thread.id}
+                    type="button"
+                    className={[
+                      "block w-full rounded-md border px-3 py-2 text-left text-sm transition-colors",
+                      active
+                        ? "border-accent bg-accent/20 text-foreground"
+                        : "border-border bg-card text-muted-foreground hover:bg-accent/10",
+                    ].join(" ")}
+                    onClick={() => setActiveThreadId(thread.id)}
+                  >
+                    <p className="font-medium text-foreground">{thread.subject}</p>
+                    <p className="line-clamp-1 text-xs text-muted-foreground">{thread.lastMessage}</p>
+                  </button>
+                );
+              })
             )}
           </div>
+        </ScrollArea>
 
-          <div className="space-y-2">
-            <label htmlFor="widget-quick-reply" className="text-xs font-medium uppercase tracking-wide text-muted">
-              Quick reply
-            </label>
-            <input
-              id="widget-quick-reply"
-              className="dashboard-control text-sm"
-              placeholder={activeThread ? `Reply to ${activeThread.subject}` : "Select a thread"}
-              value={draftReply}
-              onChange={(event) => setDraftReply(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  handleSendReply();
-                }
-              }}
-              disabled={!activeThread}
-            />
-            <div className="flex items-center justify-between">
-              <button
-                type="button"
-                className="gradient-button px-3 py-1.5 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-60"
-                onClick={handleSendReply}
-                disabled={!activeThread || draftReply.trim().length === 0}
-              >
-                Send
-              </button>
-              <Link href="/inbox" className="text-xs font-semibold text-primary">
-                Open full inbox
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-    </div>
+        <FormField id="widget-quick-reply" className="space-y-2">
+          <FormLabel className="text-xs uppercase tracking-wide">Quick reply</FormLabel>
+          <Input
+            id="widget-quick-reply"
+            placeholder={activeThread ? `Reply to ${activeThread.subject}` : "Select a thread"}
+            value={draftReply}
+            onChange={(event) => setDraftReply(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                handleSendReply();
+              }
+            }}
+            disabled={!activeThread}
+          />
+        </FormField>
+        <div className="flex items-center justify-between">
+          <Button
+            size="sm"
+            onClick={handleSendReply}
+            disabled={!activeThread || draftReply.trim().length === 0}
+          >
+            Send
+          </Button>
+          <Link href="/inbox" className="text-xs font-semibold text-accent">
+            Open full inbox
+          </Link>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }

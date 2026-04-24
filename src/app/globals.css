@@ -2,58 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-bg: #f7f3ee;
-  --color-text: #2a231d;
-  --color-surface: #fffdfa;
-  --color-surface-edge: #e7ddd0;
-  --color-muted: #6e6153;
-  --color-primary: #9d5f30;
-  --color-secondary: #9d5f30;
-  --color-accent: #9d5f30;
-  --color-success: #12895f;
-  --color-danger: #c4445f;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0f1012;
-    --color-text: #f1efeb;
-    --color-surface: #181a1d;
-    --color-surface-edge: #2e3238;
-    --color-muted: #aba59b;
-    --color-primary: #cf9562;
-    --color-secondary: #cf9562;
-    --color-accent: #cf9562;
-    --color-success: #4cb685;
-    --color-danger: #e07a87;
-  }
-}
-
-:root[data-theme="light"] {
-  --color-bg: #f7f3ee;
-  --color-text: #2a231d;
-  --color-surface: #fffdfa;
-  --color-surface-edge: #e7ddd0;
-  --color-muted: #6e6153;
-  --color-primary: #9f6233;
-  --color-secondary: #9f6233;
-  --color-accent: #9f6233;
-  --color-success: #12895f;
-  --color-danger: #c4445f;
-}
-
-:root[data-theme="dark"] {
-  --color-bg: #0f1012;
-  --color-text: #f1efeb;
-  --color-surface: #181a1d;
-  --color-surface-edge: #2e3238;
-  --color-muted: #aba59b;
-  --color-primary: #cf9562;
-  --color-secondary: #cf9562;
-  --color-accent: #cf9562;
-  --color-success: #4cb685;
-  --color-danger: #e07a87;
+/*
+ * `@deftai/deft-components/styles.css` (imported in `src/app/layout.tsx`)
+ * defines the dark shadcn palette at `:root`. Dark is therefore our default
+ * theme — no class required on <html>. The rules below opt into a light
+ * palette when the <html> element has the `light` class (set by
+ * `ThemeProvider` and the pre-hydration script).
+ */
+:root.light {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 248 80% 62%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+  --success: 145 65% 35%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 95% 45%;
+  --warning-foreground: 0 0% 100%;
+  --info: 200 80% 45%;
+  --info-foreground: 0 0% 100%;
+  --error: 0 72% 51%;
+  --shadow-sm: 0 1px 2px 0 hsl(240 6% 10% / 0.04);
+  --shadow-md: 0 4px 12px -2px hsl(240 6% 10% / 0.06);
+  --shadow-lg: 0 12px 32px -4px hsl(240 6% 10% / 0.10);
 }
 
 * {
@@ -65,335 +50,12 @@ body {
   padding: 0;
   margin: 0;
   min-height: 100vh;
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-inter), sans-serif;
   line-height: 1.5;
 }
+
+/* The library's styles.css already sets background/foreground/font on body. */
 
 a {
   color: inherit;
   text-decoration: none;
-}
-
-.brand-page {
-  min-height: 100vh;
-  background:
-    radial-gradient(980px 520px at 2% -8%, color-mix(in srgb, var(--color-primary) 28%, transparent), transparent 58%),
-    radial-gradient(840px 420px at 100% 2%, color-mix(in srgb, var(--color-primary) 14%, transparent), transparent 63%),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 90%, white 10%) 0%, var(--color-bg) 100%);
-}
-
-:root[data-theme="dark"] .brand-page {
-  background:
-    radial-gradient(980px 500px at 4% -5%, color-mix(in srgb, var(--color-primary) 42%, transparent), transparent 61%),
-    radial-gradient(760px 360px at 98% 0%, color-mix(in srgb, var(--color-primary) 20%, transparent), transparent 66%),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 90%, black 10%) 0%, var(--color-bg) 100%);
-}
-
-.neu-panel {
-  position: relative;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 82%, transparent);
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
-  box-shadow: 0 24px 56px -34px color-mix(in srgb, var(--color-primary) 42%, transparent),
-    0 10px 24px -18px color-mix(in srgb, var(--color-primary) 28%, transparent);
-  backdrop-filter: blur(10px);
-}
-
-.neu-panel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  border: 1px solid color-mix(in srgb, white 32%, transparent);
-}
-
-:root[data-theme="dark"] .neu-panel {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 56%, transparent);
-  box-shadow: 0 20px 44px -36px color-mix(in srgb, var(--color-primary) 24%, transparent),
-    0 8px 18px -16px color-mix(in srgb, var(--color-primary) 14%, transparent);
-}
-
-:root[data-theme="dark"] .neu-panel::before {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 26%, transparent);
-}
-
-.gradient-kicker {
-  color: var(--color-primary);
-}
-
-.gradient-text {
-  color: var(--color-primary);
-}
-
-.gradient-button {
-  border: 0;
-  border-radius: 9999px;
-  background: var(--color-primary);
-  color: #ffffff;
-  box-shadow: 0 18px 34px -20px color-mix(in srgb, var(--color-primary) 72%, transparent);
-  transition: transform 0.2s ease, filter 0.2s ease;
-}
-
-.gradient-button:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.06);
-}
-
-.gradient-button:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--color-primary) 62%, white);
-  outline-offset: 2px;
-}
-
-.secondary-button {
-  border-radius: 9999px;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 90%, transparent);
-  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
-  color: var(--color-text);
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.secondary-button:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-surface-edge));
-  background: color-mix(in srgb, var(--color-surface) 94%, white 6%);
-}
-
-:root[data-theme="dark"] .secondary-button {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 52%, transparent);
-  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
-}
-
-:root[data-theme="dark"] .secondary-button:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 24%, var(--color-surface-edge));
-}
-
-.dashboard-page {
-  background:
-    radial-gradient(1120px 540px at -12% -6%, color-mix(in srgb, var(--color-primary) 20%, transparent), transparent 62%),
-    radial-gradient(920px 460px at 108% 2%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 66%),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 92%, white 8%) 0%, var(--color-bg) 100%);
-}
-
-:root[data-theme="dark"] .dashboard-page {
-  background:
-    radial-gradient(1060px 520px at -10% -6%, color-mix(in srgb, var(--color-primary) 36%, transparent), transparent 63%),
-    radial-gradient(860px 420px at 108% 0%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 66%),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 92%, black 8%) 0%, var(--color-bg) 100%);
-}
-
-.dashboard-panel {
-  position: relative;
-  border-radius: 22px;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 84%, transparent);
-  background:
-    linear-gradient(165deg, color-mix(in srgb, var(--color-surface) 97%, white 3%) 0%, color-mix(in srgb, var(--color-surface) 88%, transparent) 100%);
-  box-shadow: 0 22px 44px -30px color-mix(in srgb, var(--color-primary) 38%, transparent),
-    0 12px 24px -20px rgba(15, 23, 42, 0.32);
-  backdrop-filter: blur(12px);
-}
-
-.dashboard-panel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  border: 1px solid color-mix(in srgb, white 28%, transparent);
-}
-
-:root[data-theme="dark"] .dashboard-panel {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 62%, transparent);
-  background:
-    linear-gradient(165deg, color-mix(in srgb, var(--color-surface) 94%, black 6%) 0%, color-mix(in srgb, var(--color-surface) 86%, transparent) 100%);
-  box-shadow: 0 20px 40px -32px color-mix(in srgb, var(--color-primary) 24%, transparent),
-    0 10px 22px -20px rgba(2, 8, 23, 0.52);
-}
-
-:root[data-theme="dark"] .dashboard-panel::before {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 24%, transparent);
-}
-.surface-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 18px;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 82%, transparent);
-  background:
-    linear-gradient(160deg, color-mix(in srgb, var(--color-surface) 97%, white 3%) 0%, color-mix(in srgb, var(--color-surface) 87%, transparent) 100%);
-  box-shadow: 0 14px 30px -24px rgba(15, 23, 42, 0.34), 0 10px 18px -16px color-mix(in srgb, var(--color-primary) 24%, transparent);
-  backdrop-filter: blur(8px);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.surface-card:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--color-primary) 34%, var(--color-surface-edge));
-  box-shadow: 0 22px 36px -28px rgba(102, 71, 240, 0.42), 0 12px 20px -18px rgba(15, 23, 42, 0.32);
-}
-
-:root[data-theme="dark"] .surface-card {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 56%, transparent);
-  background:
-    linear-gradient(160deg, color-mix(in srgb, var(--color-surface) 94%, black 6%) 0%, color-mix(in srgb, var(--color-surface) 84%, transparent) 100%);
-}
-
-:root[data-theme="dark"] .surface-card:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 22%, var(--color-surface-edge));
-}
-
-.dashboard-subcard {
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 74%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 66%, var(--color-surface) 34%);
-}
-
-:root[data-theme="dark"] .dashboard-subcard {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 44%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 58%, var(--color-surface) 42%);
-}
-
-.dashboard-control {
-  min-height: 44px;
-  width: 100%;
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 84%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 56%, var(--color-surface) 44%);
-  padding: 0.6rem 0.8rem;
-  color: var(--color-text);
-  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.dashboard-control:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-surface-edge));
-}
-
-.dashboard-control:focus-visible {
-  outline: none;
-  border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-surface-edge));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
-}
-
-:root[data-theme="dark"] .dashboard-control {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 52%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 50%, var(--color-surface) 50%);
-}
-
-.dashboard-nav-link {
-  min-height: 44px;
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 80%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 56%, var(--color-surface) 44%);
-  padding: 0.6rem 0.8rem;
-  color: var(--color-text);
-  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.dashboard-nav-link:hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--color-primary) 34%, var(--color-surface-edge));
-  background: color-mix(in srgb, var(--color-surface) 70%, white 30%);
-}
-
-.dashboard-nav-link[data-active="true"] {
-  border-color: color-mix(in srgb, var(--color-primary) 44%, var(--color-surface-edge));
-  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface) 88%);
-  color: var(--color-text);
-}
-
-:root[data-theme="dark"] .dashboard-nav-link {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 50%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 48%, var(--color-surface) 52%);
-}
-
-:root[data-theme="dark"] .dashboard-nav-link:hover {
-  background: color-mix(in srgb, var(--color-surface) 74%, transparent);
-}
-
-.dashboard-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  border-radius: 9999px;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 78%, transparent);
-  background: color-mix(in srgb, var(--color-surface) 72%, transparent);
-  padding: 0.2rem 0.55rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
-:root[data-theme="dark"] .dashboard-chip {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 42%, transparent);
-  background: color-mix(in srgb, var(--color-surface) 60%, transparent);
-}
-
-.hero-preview {
-  border-radius: 22px;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 85%, transparent);
-  background:
-    linear-gradient(150deg, color-mix(in srgb, var(--color-surface) 98%, white 2%) 0%, color-mix(in srgb, var(--color-bg) 96%, var(--color-surface) 4%) 100%);
-  box-shadow: 0 26px 44px -30px rgba(17, 24, 39, 0.4), 0 16px 30px -26px color-mix(in srgb, var(--color-primary) 60%, transparent);
-}
-
-:root[data-theme="dark"] .hero-preview {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 54%, transparent);
-  background:
-    linear-gradient(150deg, color-mix(in srgb, var(--color-surface) 94%, black 6%) 0%, color-mix(in srgb, var(--color-bg) 93%, var(--color-surface) 7%) 100%);
-}
-
-.hero-preview-row {
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--color-surface-edge) 74%, transparent);
-  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
-}
-
-:root[data-theme="dark"] .hero-preview-row {
-  border-color: color-mix(in srgb, var(--color-surface-edge) 48%, transparent);
-}
-
-.status-dot {
-  height: 8px;
-  width: 8px;
-  border-radius: 9999px;
-  background: var(--color-primary);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-primary) 10%, transparent);
-}
-
-.accent-divider {
-  height: 3px;
-  width: 3.5rem;
-  border-radius: 9999px;
-  background: var(--color-primary);
-}
-
-:root[data-theme="dark"] header,
-:root[data-theme="dark"] #value-props,
-:root[data-theme="dark"] #how-it-works,
-:root[data-theme="dark"] footer {
-  border-color: transparent;
-}
-
-@keyframes float-soft {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-.float-soft {
-  animation: float-soft 6.5s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .float-soft,
-  .gradient-button {
-    animation: none;
-    transition: none;
-  }
 }

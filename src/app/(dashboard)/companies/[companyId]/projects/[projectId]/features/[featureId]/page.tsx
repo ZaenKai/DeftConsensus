@@ -21,7 +21,7 @@ export default async function CompanyProjectFeatureRoute({
   const resolvedSearchParams = await searchParams;
 
   return (
-    <Suspense fallback={<div className="surface-card p-4 text-sm text-muted">Loading feature detail…</div>}>
+    <Suspense fallback={<div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">Loading feature detail…</div>}>
       <FeatureWorkspace
         companyId={resolvedParams.companyId}
         projectId={resolvedParams.projectId}

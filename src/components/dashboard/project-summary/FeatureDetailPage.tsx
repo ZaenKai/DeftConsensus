@@ -3,6 +3,17 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@deftai/deft-components";
 import { dashboardMock } from "@/mocks/dashboard";
 import { useDashboardContext } from "../shell/DashboardContext";
 
@@ -25,74 +36,92 @@ export function FeatureDetailPage() {
 
   if (!project || !feature || uiState === "error") {
     return (
-      <section className="dashboard-subcard border-danger/40 bg-danger/10 p-5">
-        <h2 className="font-heading text-2xl font-bold text-danger">Feature detail unavailable</h2>
-        <p className="mt-2 text-sm text-muted">The selected feature could not be found for this project context.</p>
-        <Link href={`/projects/${params.projectId}`} className="mt-3 inline-flex text-sm font-semibold text-primary">
-          Back to project summary
-        </Link>
-      </section>
+      <Alert variant="destructive">
+        <AlertTitle>Feature detail unavailable</AlertTitle>
+        <AlertDescription>
+          The selected feature could not be found for this project context.{" "}
+          <Link href={`/projects/${params.projectId}`} className="font-semibold text-accent">
+            Back to project summary
+          </Link>
+        </AlertDescription>
+      </Alert>
     );
   }
 
   if (uiState === "loading") {
     return (
-      <section className="dashboard-subcard p-5 text-sm text-muted" aria-live="polite">
-        Loading feature detail…
-      </section>
+      <Card>
+        <CardContent className="p-5 text-sm text-muted-foreground" aria-live="polite">
+          Loading feature detail…
+        </CardContent>
+      </Card>
     );
   }
+
+  const metadataCards = [
+    { label: "Status", value: feature.status, highlight: true },
+    { label: "Owner", value: feature.owner },
+    { label: "Priority", value: feature.priority },
+  ];
 
   return (
     <div className="space-y-7">
       <section aria-labelledby="feature-detail-title">
-        <span className="dashboard-chip">Feature Detail</span>
-        <h2 id="feature-detail-title" className="mt-1 font-heading text-3xl font-bold tracking-tight">
+        <Badge variant="outline">Feature Detail</Badge>
+        <h2 id="feature-detail-title" className="mt-1 text-3xl font-bold tracking-tight">
           {feature.name}
         </h2>
-        <p className="mt-2 max-w-3xl text-sm text-muted">{feature.shortDescription}</p>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{feature.shortDescription}</p>
       </section>
 
       <section className="grid gap-3 md:grid-cols-3" aria-label="Feature metadata">
-        <article className="surface-card p-4 md:p-5">
-          <p className="text-xs uppercase tracking-wide text-muted">Status</p>
-          <p className="mt-2 text-sm font-semibold text-primary">{feature.status}</p>
-        </article>
-        <article className="surface-card p-4 md:p-5">
-          <p className="text-xs uppercase tracking-wide text-muted">Owner</p>
-          <p className="mt-2 text-sm font-semibold">{feature.owner}</p>
-        </article>
-        <article className="surface-card p-4 md:p-5">
-          <p className="text-xs uppercase tracking-wide text-muted">Priority</p>
-          <p className="mt-2 text-sm font-semibold">{feature.priority}</p>
-        </article>
-      </section>
-      <section className="surface-card p-5 md:p-6">
-        <h3 className="font-heading text-xl font-semibold">Deep workflow boundary</h3>
-        <p className="mt-2 text-sm text-muted">
-          Full editing, collaboration threads, and implementation artifacts live here, separate from the project summary
-          triage view.
-        </p>
-        {uiState === "empty" ? (
-          <p className="dashboard-subcard mt-3 px-3 py-2 text-sm text-muted">
-            No discussion threads yet for this feature.
-          </p>
-        ) : (
-          <div className="mt-3 space-y-2 text-sm text-muted">
-            <p>Thread timeline placeholder: requirements, rationale, and approval history.</p>
-            <p>Implementation checklist placeholder: scoped tasks and verification gates.</p>
-            <p>Artifacts placeholder: linked documents, drafts, and validation notes.</p>
-          </div>
-        )}
+        {metadataCards.map((card) => (
+          <Card key={card.label}>
+            <CardContent className="p-4 md:p-5">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">{card.label}</p>
+              <p
+                className={[
+                  "mt-2 text-sm font-semibold",
+                  card.highlight ? "text-accent" : "",
+                ].join(" ")}
+              >
+                {card.value}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
       </section>
 
+      <Card>
+        <CardHeader>
+          <CardTitle>Deep workflow boundary</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Full editing, collaboration threads, and implementation artifacts live here, separate from the project summary
+            triage view.
+          </p>
+          {uiState === "empty" ? (
+            <p className="mt-3 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+              No discussion threads yet for this feature.
+            </p>
+          ) : (
+            <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <p>Thread timeline placeholder: requirements, rationale, and approval history.</p>
+              <p>Implementation checklist placeholder: scoped tasks and verification gates.</p>
+              <p>Artifacts placeholder: linked documents, drafts, and validation notes.</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <div className="flex flex-wrap gap-3">
-        <Link href={`/projects/${project.id}`} className="dashboard-nav-link inline-flex items-center px-4 py-2 text-sm font-medium">
-          Back to project summary
-        </Link>
-        <Link href="/inbox" className="gradient-button px-4 py-2 text-sm font-semibold">
-          Open Inbox Context
-        </Link>
+        <Button variant="outline" asChild>
+          <Link href={`/projects/${project.id}`}>Back to project summary</Link>
+        </Button>
+        <Button asChild>
+          <Link href="/inbox">Open Inbox Context</Link>
+        </Button>
       </div>
     </div>
   );

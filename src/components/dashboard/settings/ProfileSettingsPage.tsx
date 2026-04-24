@@ -2,6 +2,18 @@
 
 import { FormEvent, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CheckboxField,
+} from "@deftai/deft-components";
 import { dashboardMock } from "@/mocks/dashboard";
 import { useDashboardContext } from "../shell/DashboardContext";
 
@@ -22,103 +34,118 @@ export function ProfileSettingsPage() {
 
   if (isError) {
     return (
-      <section className="dashboard-subcard border-danger/40 bg-danger/10 p-5">
-        <h2 className="font-heading text-2xl font-bold text-danger">Profile settings unavailable</h2>
-        <p className="mt-2 text-sm text-muted">Try again after refreshing this route.</p>
-      </section>
+      <Alert variant="destructive">
+        <AlertTitle>Profile settings unavailable</AlertTitle>
+        <AlertDescription>Try again after refreshing this route.</AlertDescription>
+      </Alert>
     );
   }
 
   if (isLoading) {
     return (
-      <section className="dashboard-subcard p-5 text-sm text-muted" aria-live="polite">
-        Loading profile settings…
-      </section>
+      <Card>
+        <CardContent className="p-5 text-sm text-muted-foreground" aria-live="polite">
+          Loading profile settings…
+        </CardContent>
+      </Card>
     );
   }
 
   if (forceEmpty) {
     return (
-      <section className="dashboard-subcard p-5 text-sm text-muted">
-        No profile settings are available for the current user context.
-      </section>
+      <Card>
+        <CardContent className="p-5 text-sm text-muted-foreground">
+          No profile settings are available for the current user context.
+        </CardContent>
+      </Card>
     );
   }
 
   return (
     <div className="space-y-7">
       <section aria-labelledby="profile-settings-title">
-        <span className="dashboard-chip">Settings</span>
-        <h2 id="profile-settings-title" className="mt-1 font-heading text-3xl font-bold tracking-tight">
+        <Badge variant="outline">Settings</Badge>
+        <h2 id="profile-settings-title" className="mt-1 text-3xl font-bold tracking-tight">
           Profile & Preferences
         </h2>
       </section>
-      <section className="surface-card p-5 md:p-6">
-        <h3 className="font-heading text-xl font-semibold">Profile summary</h3>
-        <dl className="mt-3 grid gap-3 sm:grid-cols-3">
-          <div>
-            <dt className="text-xs uppercase tracking-wide text-muted">Name</dt>
-            <dd className="mt-1 text-sm font-medium">{user.name}</dd>
-          </div>
-          <div>
-            <dt className="text-xs uppercase tracking-wide text-muted">Email</dt>
-            <dd className="mt-1 text-sm font-medium">{user.email}</dd>
-          </div>
-          <div>
-            <dt className="text-xs uppercase tracking-wide text-muted">Role</dt>
-            <dd className="mt-1 text-sm font-medium">{user.title}</dd>
-          </div>
-        </dl>
-      </section>
 
-      <section className="surface-card p-5 md:p-6">
-        <h3 className="font-heading text-xl font-semibold">Notification preferences</h3>
-        <form className="mt-3 space-y-3" onSubmit={handleSubmit}>
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
+      <Card>
+        <CardHeader>
+          <CardTitle>Profile summary</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <dl className="grid gap-3 sm:grid-cols-3">
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-muted-foreground">Name</dt>
+              <dd className="mt-1 text-sm font-medium">{user.name}</dd>
+            </div>
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-muted-foreground">Email</dt>
+              <dd className="mt-1 text-sm font-medium">{user.email}</dd>
+            </div>
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-muted-foreground">Role</dt>
+              <dd className="mt-1 text-sm font-medium">{user.title}</dd>
+            </div>
+          </dl>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Notification preferences</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form className="space-y-3" onSubmit={handleSubmit}>
+            <CheckboxField
+              id="notify-mentions"
+              label="Mentions and direct comment pings"
               checked={notificationPreferences.mentions}
-              onChange={(event) => setNotificationPreference("mentions", event.target.checked)}
+              onCheckedChange={(checked) =>
+                setNotificationPreference("mentions", checked === true)
+              }
             />
-            Mentions and direct comment pings
-          </label>
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
+            <CheckboxField
+              id="notify-assignments"
+              label="Assignment and ownership changes"
               checked={notificationPreferences.assignments}
-              onChange={(event) => setNotificationPreference("assignments", event.target.checked)}
+              onCheckedChange={(checked) =>
+                setNotificationPreference("assignments", checked === true)
+              }
             />
-            Assignment and ownership changes
-          </label>
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
+            <CheckboxField
+              id="notify-digest"
+              label="Daily digest summary email"
               checked={notificationPreferences.digestEmails}
-              onChange={(event) => setNotificationPreference("digestEmails", event.target.checked)}
+              onCheckedChange={(checked) =>
+                setNotificationPreference("digestEmails", checked === true)
+              }
             />
-            Daily digest summary email
-          </label>
 
-          <button type="submit" className="gradient-button px-4 py-2 text-sm font-semibold">
-            Save preferences
-          </button>
-          {savedMessage ? <p className="text-sm text-success">{savedMessage}</p> : null}
-        </form>
-      </section>
+            <Button type="submit">Save preferences</Button>
+            {savedMessage ? <p className="text-sm text-success">{savedMessage}</p> : null}
+          </form>
+        </CardContent>
+      </Card>
 
-      <section className="surface-card p-5 md:p-6">
-        <h3 className="font-heading text-xl font-semibold">Sessions & Security</h3>
-        <ul className="mt-3 space-y-2">
-          {dashboardMock.sessions.map((session) => (
-            <li key={session.id} className="dashboard-subcard p-3">
-              <p className="text-sm font-medium">{session.label}</p>
-              <p className="text-xs text-muted">
-                {session.location} · {session.lastActive} {session.current ? "· Current session" : ""}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle>Sessions & Security</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2">
+            {dashboardMock.sessions.map((session) => (
+              <li key={session.id} className="rounded-md border border-border bg-muted/30 p-3">
+                <p className="text-sm font-medium">{session.label}</p>
+                <p className="text-xs text-muted-foreground">
+                  {session.location} · {session.lastActive} {session.current ? "· Current session" : ""}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   );
 }

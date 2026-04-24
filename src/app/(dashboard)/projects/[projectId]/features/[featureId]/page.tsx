@@ -22,7 +22,7 @@ export default async function FeatureDetailRoute({
   const resolvedSearchParams = await searchParams;
   const project = dashboardMock.projects.find((item) => item.id === resolvedParams.projectId);
   return (
-    <Suspense fallback={<div className="surface-card p-4 text-sm text-muted">Loading feature detail…</div>}>
+    <Suspense fallback={<div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">Loading feature detail…</div>}>
       <FeatureWorkspace
         companyId={project?.companyId ?? ""}
         projectId={resolvedParams.projectId}

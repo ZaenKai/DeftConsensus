@@ -22,13 +22,11 @@ describe("Landing page", () => {
     const user = userEvent.setup();
     render(<HomePage />);
 
-    await user.click(screen.getByRole("button", { name: /switch theme to dark/i }));
-    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
-    expect(document.documentElement).toHaveAttribute("data-theme-mode", "dark");
+    await user.click(screen.getByRole("radio", { name: /switch theme to dark/i }));
+    expect(document.documentElement.classList.contains("light")).toBe(false);
 
-    await user.click(screen.getByRole("button", { name: /switch theme to light/i }));
-    expect(document.documentElement).toHaveAttribute("data-theme", "light");
-    expect(document.documentElement).toHaveAttribute("data-theme-mode", "light");
+    await user.click(screen.getByRole("radio", { name: /switch theme to light/i }));
+    expect(document.documentElement.classList.contains("light")).toBe(true);
   });
 
   it("opens modal from hero CTA and closes with escape", async () => {

@@ -19,5 +19,6 @@
 
 # project internals
 /.agents
+/.planning
 /deft
 /vbrief

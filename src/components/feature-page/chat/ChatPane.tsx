@@ -1,4 +1,19 @@
 import { useMemo, useState } from "react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+  Textarea,
+} from "@deftai/deft-components";
 import { ChartIcon, MessageIcon } from "@/components/landing/icons";
 import type { ChatMessage, FeaturePageUiState, FeatureParticipant } from "@/mocks/feature-page";
 
@@ -40,88 +55,107 @@ export function ChatPane({
   };
 
   if (uiState === "loading") {
-    return <section className="surface-card p-4 text-sm text-muted">Loading chat…</section>;
+    return (
+      <Card>
+        <CardContent className="p-4 text-sm text-muted-foreground">Loading chat…</CardContent>
+      </Card>
+    );
   }
   if (uiState === "error") {
     return (
-      <section className="surface-card border-danger/40 bg-danger/10 p-4 text-sm text-danger">
-        Chat is currently unavailable.
-      </section>
+      <Alert variant="destructive">
+        <AlertTitle>Chat unavailable</AlertTitle>
+        <AlertDescription>Chat is currently unavailable.</AlertDescription>
+      </Alert>
     );
   }
 
   return (
     <section aria-label="Chat pane" className="h-full">
-      <article className="surface-card flex h-full flex-col overflow-hidden" aria-label="Unified chat panel">
-        <header className="border-b border-[color:var(--color-surface-edge)] bg-primary/5 p-2.5 md:p-3">
+      <Card className="flex h-full flex-col overflow-hidden" aria-label="Unified chat panel">
+        <header className="border-b border-border bg-accent/5 p-2.5 md:p-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.12em] text-muted">Chat</p>
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Chat</p>
               <div className="mt-1.5 flex items-center gap-1.5">
                 {visibleParticipants.map((participant) => (
-                  <span
+                  <Badge
                     key={participant.id}
-                    className="dashboard-chip h-9 w-9 justify-center rounded-full p-0 text-xs"
+                    variant="outline"
+                    className="h-9 w-9 justify-center rounded-full p-0 text-xs"
                     title={participant.name}
                   >
                     {participant.avatarInitials}
-                  </span>
+                  </Badge>
                 ))}
-                {overflowCount > 0 ? <span className="dashboard-chip">+{overflowCount}</span> : null}
+                {overflowCount > 0 ? <Badge variant="outline">+{overflowCount}</Badge> : null}
               </div>
             </div>
             <div className="flex items-center gap-1.5">
-              <details>
-                <summary className="dashboard-nav-link cursor-pointer px-2.5 py-1.5 text-xs">Participants</summary>
-                <ul className="surface-card mt-2 space-y-1 p-2 text-sm">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-card px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent/20 hover:text-foreground">
+                  Participants
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>All participants</DropdownMenuLabel>
                   {participants.map((participant) => (
-                    <li key={participant.id}>
+                    <DropdownMenuItem key={participant.id} disabled>
                       {participant.name} · {participant.role}
-                    </li>
+                    </DropdownMenuItem>
                   ))}
-                </ul>
-              </details>
-              <button
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button
                 type="button"
-                className="dashboard-nav-link px-2.5 py-1.5 text-xs"
+                variant="outline"
+                size="sm"
                 onClick={() => setInviteNotice("Invite action captured (mock).")}
               >
                 Invite
-              </button>
+              </Button>
             </div>
           </div>
-          {inviteNotice ? <p className="mt-2 text-xs text-muted">{inviteNotice}</p> : null}
+          {inviteNotice ? <p className="mt-2 text-xs text-muted-foreground">{inviteNotice}</p> : null}
         </header>
         <div className="min-h-0 flex-1 overflow-y-auto p-2.5 md:p-3">
           {uiState === "empty" ? (
-            <p className="text-sm text-muted">No messages yet. Start the discussion below.</p>
+            <p className="text-sm text-muted-foreground">No messages yet. Start the discussion below.</p>
           ) : (
             <div className="space-y-2">
               {messages.map((msg) => {
                 const author = participantById.get(msg.authorId);
                 const isCurrentUser = msg.authorId === currentUserId;
                 return (
-                  <article key={msg.id} className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>
+                  <article
+                    key={msg.id}
+                    className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}
+                  >
                     <div
                       className={`max-w-[90%] rounded-xl border p-2 text-sm md:max-w-[80%] ${
                         isCurrentUser
-                          ? "border-primary/40 bg-primary/10 text-text"
-                          : "border-[color:var(--color-surface-edge)] bg-[color:var(--color-surface)] text-text"
+                          ? "border-accent/40 bg-accent/10 text-foreground"
+                          : "border-border bg-card text-foreground"
                       }`}
                     >
-                      <p className="text-xs font-semibold text-muted">{author?.name ?? "Unknown"}</p>
+                      <p className="text-xs font-semibold text-muted-foreground">
+                        {author?.name ?? "Unknown"}
+                      </p>
                       <p>{msg.body}</p>
                       <div className="mt-1 flex items-center justify-between gap-2">
-                        <span className="text-[11px] text-muted">{new Date(msg.timestamp).toLocaleTimeString()}</span>
+                        <span className="text-[11px] text-muted-foreground">
+                          {new Date(msg.timestamp).toLocaleTimeString()}
+                        </span>
                         <button
                           type="button"
-                          className="text-[11px] font-semibold text-primary"
+                          className="text-[11px] font-semibold text-accent"
                           onClick={() => setReplyParentId(msg.id)}
                         >
                           Reply
                         </button>
                       </div>
-                      {msg.parentId ? <p className="mt-1 text-[11px] text-muted">Thread reply</p> : null}
+                      {msg.parentId ? (
+                        <p className="mt-1 text-[11px] text-muted-foreground">Thread reply</p>
+                      ) : null}
                     </div>
                   </article>
                 );
@@ -130,11 +164,11 @@ export function ChatPane({
           )}
         </div>
 
-        <footer className="border-t border-[color:var(--color-surface-edge)] bg-primary/5 p-2.5 md:p-3">
+        <footer className="border-t border-border bg-accent/5 p-2.5 md:p-3">
           <div className="flex items-end gap-2">
             <div className="min-w-0 flex-1">
-              <textarea
-                className="dashboard-control min-h-20 border-primary/25 bg-primary/[0.08] text-sm"
+              <Textarea
+                className="min-h-20"
                 value={message}
                 aria-label="Message"
                 placeholder="Write a message…"
@@ -148,30 +182,37 @@ export function ChatPane({
               />
             </div>
             <div className="mb-0.5 flex shrink-0 items-center gap-2">
-              <button
+              <Button
                 type="button"
-                className="gradient-button inline-flex h-11 w-11 items-center justify-center rounded-full text-white disabled:cursor-not-allowed disabled:opacity-60"
+                size="icon"
+                className="h-11 w-11 rounded-full"
                 onClick={handleSendMessage}
                 disabled={message.trim().length === 0}
                 aria-label="Send message"
                 title="Send message"
               >
                 <MessageIcon className="h-4 w-4" />
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="dashboard-nav-link inline-flex h-11 w-11 min-h-0 items-center justify-center rounded-full p-0"
+                variant="outline"
+                size="icon"
+                className="h-11 w-11 rounded-full"
                 onClick={onOpenVoteModal}
                 aria-label="Propose vote"
                 title="Propose vote"
               >
-                <ChartIcon className="h-4 w-4 text-primary" />
-              </button>
+                <ChartIcon className="h-4 w-4 text-accent" />
+              </Button>
             </div>
           </div>
-          {replyParentId ? <span className="dashboard-chip mt-2 inline-flex">Replying in thread</span> : null}
+          {replyParentId ? (
+            <Badge variant="outline" className="mt-2">
+              Replying in thread
+            </Badge>
+          ) : null}
         </footer>
-      </article>
+      </Card>
     </section>
   );
 }

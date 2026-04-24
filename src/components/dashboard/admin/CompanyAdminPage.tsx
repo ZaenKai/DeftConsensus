@@ -2,6 +2,17 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Badge,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+} from "@deftai/deft-components";
 import { getCompanyAdminSettings } from "@/mocks/dashboard";
 import { useDashboardContext } from "../shell/DashboardContext";
 
@@ -17,92 +28,108 @@ export function CompanyAdminPage() {
 
   if (!isCompanyAdmin) {
     return (
-      <section className="dashboard-subcard border-danger/35 bg-danger/10 p-5">
-        <h2 className="font-heading text-2xl font-bold text-danger">Unauthorized</h2>
-        <p className="mt-2 text-sm text-muted">
-          Admin settings are only available when your role in the selected company is admin.
-        </p>
-        <Link href="/projects" className="mt-3 inline-flex text-sm font-semibold text-primary">
-          Back to projects
-        </Link>
-      </section>
+      <Alert variant="destructive">
+        <AlertTitle>Unauthorized</AlertTitle>
+        <AlertDescription>
+          Admin settings are only available when your role in the selected company is admin.{" "}
+          <Link href="/projects" className="font-semibold text-accent">
+            Back to projects
+          </Link>
+        </AlertDescription>
+      </Alert>
     );
   }
 
   if (isError) {
     return (
-      <section className="dashboard-subcard border-danger/40 bg-danger/10 p-5">
-        <h2 className="font-heading text-2xl font-bold text-danger">Admin settings failed to load</h2>
-        <p className="mt-2 text-sm text-muted">Retry after refreshing this route.</p>
-      </section>
+      <Alert variant="destructive">
+        <AlertTitle>Admin settings failed to load</AlertTitle>
+        <AlertDescription>Retry after refreshing this route.</AlertDescription>
+      </Alert>
     );
   }
 
   if (isLoading) {
     return (
-      <section className="dashboard-subcard p-5 text-sm text-muted" aria-live="polite">
-        Loading company admin settings…
-      </section>
+      <Card>
+        <CardContent className="p-5 text-sm text-muted-foreground" aria-live="polite">
+          Loading company admin settings…
+        </CardContent>
+      </Card>
     );
   }
 
   if (forceEmpty || !adminSettings) {
     return (
-      <section className="dashboard-subcard p-5 text-sm text-muted">
-        No admin configuration is available for this company.
-      </section>
+      <Card>
+        <CardContent className="p-5 text-sm text-muted-foreground">
+          No admin configuration is available for this company.
+        </CardContent>
+      </Card>
     );
   }
 
   return (
     <div className="space-y-7">
       <section aria-labelledby="admin-company-title">
-        <span className="dashboard-chip">Admin</span>
-        <h2 id="admin-company-title" className="mt-1 font-heading text-3xl font-bold tracking-tight">
+        <Badge variant="outline">Admin</Badge>
+        <h2 id="admin-company-title" className="mt-1 text-3xl font-bold tracking-tight">
           {adminSettings.profile.name} Settings
         </h2>
       </section>
 
-      <section className="surface-card p-5 md:p-6">
-        <h3 className="font-heading text-xl font-semibold">Company profile</h3>
-        <div className="mt-3 grid gap-3 md:grid-cols-3">
-          <label className="space-y-1 text-sm">
-            <span className="text-xs uppercase tracking-wide text-muted">Name</span>
-            <input value={adminSettings.profile.name} readOnly className="dashboard-control" />
-          </label>
-          <label className="space-y-1 text-sm">
-            <span className="text-xs uppercase tracking-wide text-muted">Domain</span>
-            <input value={adminSettings.profile.domain} readOnly className="dashboard-control" />
-          </label>
-          <label className="space-y-1 text-sm">
-            <span className="text-xs uppercase tracking-wide text-muted">Timezone</span>
-            <input value={adminSettings.profile.timezone} readOnly className="dashboard-control" />
-          </label>
-        </div>
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle>Company profile</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 md:grid-cols-3">
+            <label className="space-y-1 text-sm">
+              <span className="text-xs uppercase tracking-wide text-muted-foreground">Name</span>
+              <Input value={adminSettings.profile.name} readOnly />
+            </label>
+            <label className="space-y-1 text-sm">
+              <span className="text-xs uppercase tracking-wide text-muted-foreground">Domain</span>
+              <Input value={adminSettings.profile.domain} readOnly />
+            </label>
+            <label className="space-y-1 text-sm">
+              <span className="text-xs uppercase tracking-wide text-muted-foreground">Timezone</span>
+              <Input value={adminSettings.profile.timezone} readOnly />
+            </label>
+          </div>
+        </CardContent>
+      </Card>
 
-      <section className="surface-card p-5 md:p-6">
-        <h3 className="font-heading text-xl font-semibold">Members & roles</h3>
-        <ul className="mt-3 space-y-2">
-          {adminSettings.members.map((member) => (
-            <li key={member.id} className="dashboard-subcard p-3">
-              <p className="text-sm font-medium">{member.name}</p>
-              <p className="text-xs text-muted">
-                {member.email} · {member.role}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle>Members & roles</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2">
+            {adminSettings.members.map((member) => (
+              <li key={member.id} className="rounded-md border border-border bg-muted/30 p-3">
+                <p className="text-sm font-medium">{member.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {member.email} · {member.role}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
 
-      <section className="surface-card p-5 md:p-6">
-        <h3 className="font-heading text-xl font-semibold">Project policy placeholders</h3>
-        <ul className="mt-3 list-disc space-y-1 pl-4 text-sm text-muted">
-          {adminSettings.projectPolicies.map((policy) => (
-            <li key={policy}>{policy}</li>
-          ))}
-        </ul>
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle>Project policy placeholders</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="list-disc space-y-1 pl-4 text-sm text-muted-foreground">
+            {adminSettings.projectPolicies.map((policy) => (
+              <li key={policy}>{policy}</li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -2,6 +2,17 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Badge,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@deftai/deft-components";
 import { getMyWorkBuckets } from "@/mocks/dashboard";
 import { useDashboardContext } from "../shell/DashboardContext";
 
@@ -64,60 +75,65 @@ export function MyWorkPage() {
   return (
     <div className="space-y-7">
       <section aria-labelledby="my-work-title">
-        <span className="dashboard-chip">My Work</span>
-        <h2 id="my-work-title" className="mt-1 font-heading text-3xl font-bold tracking-tight">
+        <Badge variant="outline">My Work</Badge>
+        <h2 id="my-work-title" className="mt-1 text-3xl font-bold tracking-tight">
           Action index for {selectedCompany.shortName}
         </h2>
-        <p className="mt-2 max-w-3xl text-sm text-muted">
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
           Prioritized triage view for assignments, mentions, and status movement. Open project summary or feature detail
           pages for deeper workflows.
         </p>
       </section>
 
       {isError ? (
-        <section className="dashboard-subcard border-danger/40 bg-danger/10 p-4" aria-live="polite">
-          <h3 className="font-heading text-lg font-semibold text-danger">My Work failed to load</h3>
-          <p className="mt-1 text-sm text-muted">Try refreshing or switch to a different company context.</p>
-        </section>
+        <Alert variant="destructive" aria-live="polite">
+          <AlertTitle>My Work failed to load</AlertTitle>
+          <AlertDescription>Try refreshing or switch to a different company context.</AlertDescription>
+        </Alert>
       ) : null}
 
       <section aria-label="My Work summary counts" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {summaryCards.map((card) => (
-          <article key={card.label} className="surface-card p-4 md:p-5">
-            <p className="text-xs uppercase tracking-[0.12em] text-muted">{card.label}</p>
-            <p className="mt-2 font-heading text-3xl font-bold text-primary">{isLoading ? "…" : card.value}</p>
-          </article>
+          <Card key={card.label}>
+            <CardContent className="p-4 md:p-5">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">{card.label}</p>
+              <p className="mt-2 text-3xl font-bold text-accent">{isLoading ? "…" : card.value}</p>
+            </CardContent>
+          </Card>
         ))}
       </section>
 
       <section aria-label="My Work sections" className="grid gap-4 lg:grid-cols-2">
         {(Object.keys(sectionMeta) as SectionKey[]).map((sectionKey) => (
-          <article key={sectionKey} className="surface-card p-5" aria-labelledby={`section-${sectionKey}-title`}>
-            <h3 id={`section-${sectionKey}-title`} className="font-heading text-xl font-semibold tracking-tight">
-              {sectionMeta[sectionKey].title}
-            </h3>
-            <p className="mt-1 text-sm text-muted">{sectionMeta[sectionKey].description}</p>
-
-            {isLoading ? (
-              <p className="mt-4 text-sm text-muted">Loading section…</p>
-            ) : buckets[sectionKey].length === 0 ? (
-              <p className="dashboard-subcard mt-4 px-3 py-2 text-sm text-muted">
-                No items in this section.
-              </p>
-            ) : (
-              <ul className="mt-4 space-y-2">
-                {buckets[sectionKey].map((item) => (
-                  <li key={item.id} className="dashboard-subcard p-3">
-                    <Link href={item.href} className="text-sm font-semibold text-text hover:text-primary">
-                      {item.title}
-                    </Link>
-                    <p className="mt-1 text-sm text-muted">{item.description}</p>
-                    <p className="mt-2 text-xs uppercase tracking-wide text-muted">{formatTimestamp(item.updatedAt)}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </article>
+          <Card key={sectionKey} aria-labelledby={`section-${sectionKey}-title`}>
+            <CardHeader>
+              <CardTitle id={`section-${sectionKey}-title`}>{sectionMeta[sectionKey].title}</CardTitle>
+              <CardDescription>{sectionMeta[sectionKey].description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <p className="text-sm text-muted-foreground">Loading section…</p>
+              ) : buckets[sectionKey].length === 0 ? (
+                <p className="rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+                  No items in this section.
+                </p>
+              ) : (
+                <ul className="space-y-2">
+                  {buckets[sectionKey].map((item) => (
+                    <li key={item.id} className="rounded-md border border-border bg-muted/30 p-3">
+                      <Link href={item.href} className="text-sm font-semibold text-foreground hover:text-accent">
+                        {item.title}
+                      </Link>
+                      <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
+                      <p className="mt-2 text-xs uppercase tracking-wide text-muted-foreground">
+                        {formatTimestamp(item.updatedAt)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
         ))}
       </section>
     </div>

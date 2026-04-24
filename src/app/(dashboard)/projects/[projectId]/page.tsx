@@ -3,7 +3,7 @@ import { ProjectSummaryPage } from "@/components/dashboard/project-summary/Proje
 
 export default function ProjectSummaryRoute() {
   return (
-    <Suspense fallback={<div className="surface-card p-4 text-sm text-muted">Loading project summary…</div>}>
+    <Suspense fallback={<div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">Loading project summary…</div>}>
       <ProjectSummaryPage />
     </Suspense>
   );

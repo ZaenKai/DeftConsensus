@@ -3,7 +3,7 @@ import { ProjectsExplorerPage } from "@/components/dashboard/explorer/ProjectsEx
 
 export default function ProjectsExplorerRoute() {
   return (
-    <Suspense fallback={<div className="surface-card p-4 text-sm text-muted">Loading projects…</div>}>
+    <Suspense fallback={<div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">Loading projects…</div>}>
       <ProjectsExplorerPage />
     </Suspense>
   );

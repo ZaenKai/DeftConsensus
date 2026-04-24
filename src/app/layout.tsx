@@ -1,18 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import "@deftai/deft-components/styles.css";
 import "./globals.css";
-
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
+import { AppProviders } from "@/components/app/AppProviders";
+import { themeInitScript } from "@/components/theme/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "DeftConsensus",
@@ -25,8 +15,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light" data-theme-mode="light" style={{ colorScheme: "light" }}>
-      <body className={`${plusJakarta.variable} ${inter.variable} font-body`}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Set the theme class before hydration to avoid a flash of the wrong theme. */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body>
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }

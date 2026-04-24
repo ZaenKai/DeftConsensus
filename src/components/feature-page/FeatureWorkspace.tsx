@@ -2,6 +2,18 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  SegmentedControl,
+  SegmentedControlItem,
+} from "@deftai/deft-components";
 import { BriefPane } from "@/components/feature-page/brief/BriefPaneDocument";
 import { ChatPane } from "@/components/feature-page/chat/ChatPane";
 import { SubfeaturePanel } from "@/components/feature-page/subfeatures/SubfeaturePanel";
@@ -40,10 +52,10 @@ export function FeatureWorkspace({ companyId, projectId, featureId, uiState }: F
 
   if (!fixture) {
     return (
-      <section className="surface-card border-danger/40 bg-danger/10 p-5">
-        <h1 className="font-heading text-2xl font-bold text-danger">Feature detail unavailable</h1>
-        <p className="mt-2 text-sm text-muted">Route context could not be resolved from mock data.</p>
-      </section>
+      <Alert variant="destructive">
+        <AlertTitle>Feature detail unavailable</AlertTitle>
+        <AlertDescription>Route context could not be resolved from mock data.</AlertDescription>
+      </Alert>
     );
   }
 
@@ -74,26 +86,20 @@ export function FeatureWorkspace({ companyId, projectId, featureId, uiState }: F
 
   return (
     <div className="space-y-3">
-      <section className="surface-card p-2 md:hidden" aria-label="Mobile pane switcher">
-        <div className="flex gap-1.5">
-          <button
-            type="button"
-            className="dashboard-nav-link px-2.5 py-1.5 text-xs"
-            data-active={activePane === "brief"}
-            onClick={() => setActivePane("brief")}
+      <Card className="md:hidden" aria-label="Mobile pane switcher">
+        <CardContent className="p-2">
+          <SegmentedControl
+            value={activePane}
+            onValueChange={(value) => setActivePane(value as "brief" | "chat")}
+            size="sm"
+            fullWidth
+            aria-label="Feature pane"
           >
-            Brief
-          </button>
-          <button
-            type="button"
-            className="dashboard-nav-link px-2.5 py-1.5 text-xs"
-            data-active={activePane === "chat"}
-            onClick={() => setActivePane("chat")}
-          >
-            Chat
-          </button>
-        </div>
-      </section>
+            <SegmentedControlItem value="brief">Brief</SegmentedControlItem>
+            <SegmentedControlItem value="chat">Chat</SegmentedControlItem>
+          </SegmentedControl>
+        </CardContent>
+      </Card>
       <div className="grid gap-3 lg:grid-cols-2 lg:items-stretch">
         <div className={`${activePane === "chat" ? "hidden md:block" : ""} h-full`}>
           <BriefPane
@@ -138,66 +144,79 @@ export function FeatureWorkspace({ companyId, projectId, featureId, uiState }: F
         </div>
       </div>
 
-      <section className="surface-card p-4" aria-label="Voting outcomes">
-        <h2 className="font-heading text-lg font-semibold">Section votes</h2>
-        <p className="mt-1 text-sm text-muted">
-          Policy: {effectivePolicy.voteModel} · quorum {effectivePolicy.quorum} · threshold{" "}
-          {Math.round(effectivePolicy.passThreshold * 100)}%
-        </p>
-        {(uiState?.vote ?? "default") === "loading" ? (
-          <p className="mt-2 text-sm text-muted">Loading votes…</p>
-        ) : (uiState?.vote ?? "default") === "error" ? (
-          <p className="mt-2 text-sm text-danger">Vote outcomes unavailable.</p>
-        ) : votes.length === 0 || (uiState?.vote ?? "default") === "empty" ? (
-          <p className="mt-2 text-sm text-muted">No vote requests yet.</p>
-        ) : (
-          <ul className="mt-2 space-y-2">
-            {voteOutcomes.map((vote) => (
-              <li key={vote.id} className="dashboard-subcard p-3 text-sm text-muted">
-                <p className="font-semibold text-text">Section: {vote.sectionId}</p>
-                <p>
-                  Y/N/A: {vote.yesVotes}/{vote.noVotes}/{vote.abstainVotes}
-                </p>
-                <p>
-                  {vote.metQuorum ? "Quorum met" : "Quorum not met"} ·{" "}
-                  {vote.approved ? "Approved" : "Not approved"}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section className="surface-card p-4" aria-label="Fork suggestion">
-        <h2 className="font-heading text-lg font-semibold">Out-of-scope suggestions</h2>
-        {(uiState?.fork ?? "default") === "loading" ? (
-          <p className="mt-2 text-sm text-muted">Evaluating fork candidates…</p>
-        ) : (uiState?.fork ?? "default") === "error" ? (
-          <p className="mt-2 text-sm text-danger">Fork suggestions unavailable.</p>
-        ) : fixture.forkCandidates.length === 0 || (uiState?.fork ?? "default") === "empty" ? (
-          <p className="mt-2 text-sm text-muted">No fork suggestions detected.</p>
-        ) : (
-          <ul className="mt-2 space-y-2">
-            {fixture.forkCandidates.map((candidate) => {
-              const isConfirmed = confirmedForkIds.includes(candidate.id);
-              return (
-                <li key={candidate.id} className="dashboard-subcard p-3">
-                  <p className="text-sm font-semibold">{candidate.title}</p>
-                  <p className="text-sm text-muted">{candidate.rationale}</p>
-                  <button
-                    type="button"
-                    className="dashboard-nav-link mt-2 px-3 py-2 text-sm"
-                    disabled={isConfirmed}
-                    onClick={() => setConfirmedForkIds((current) => [...current, candidate.id])}
-                  >
-                    {isConfirmed ? "Fork created (mock)" : "Create fork"}
-                  </button>
+      <Card aria-label="Voting outcomes">
+        <CardHeader>
+          <CardTitle>Section votes</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Policy: {effectivePolicy.voteModel} · quorum {effectivePolicy.quorum} · threshold{" "}
+            {Math.round(effectivePolicy.passThreshold * 100)}%
+          </p>
+        </CardHeader>
+        <CardContent>
+          {(uiState?.vote ?? "default") === "loading" ? (
+            <p className="text-sm text-muted-foreground">Loading votes…</p>
+          ) : (uiState?.vote ?? "default") === "error" ? (
+            <p className="text-sm text-destructive">Vote outcomes unavailable.</p>
+          ) : votes.length === 0 || (uiState?.vote ?? "default") === "empty" ? (
+            <p className="text-sm text-muted-foreground">No vote requests yet.</p>
+          ) : (
+            <ul className="space-y-2">
+              {voteOutcomes.map((vote) => (
+                <li
+                  key={vote.id}
+                  className="rounded-md border border-border bg-muted/30 p-3 text-sm text-muted-foreground"
+                >
+                  <p className="font-semibold text-foreground">Section: {vote.sectionId}</p>
+                  <p>
+                    Y/N/A: {vote.yesVotes}/{vote.noVotes}/{vote.abstainVotes}
+                  </p>
+                  <p>
+                    {vote.metQuorum ? "Quorum met" : "Quorum not met"} ·{" "}
+                    {vote.approved ? "Approved" : "Not approved"}
+                  </p>
                 </li>
-              );
-            })}
-          </ul>
-        )}
-      </section>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card aria-label="Fork suggestion">
+        <CardHeader>
+          <CardTitle>Out-of-scope suggestions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {(uiState?.fork ?? "default") === "loading" ? (
+            <p className="text-sm text-muted-foreground">Evaluating fork candidates…</p>
+          ) : (uiState?.fork ?? "default") === "error" ? (
+            <p className="text-sm text-destructive">Fork suggestions unavailable.</p>
+          ) : fixture.forkCandidates.length === 0 || (uiState?.fork ?? "default") === "empty" ? (
+            <p className="text-sm text-muted-foreground">No fork suggestions detected.</p>
+          ) : (
+            <ul className="space-y-2">
+              {fixture.forkCandidates.map((candidate) => {
+                const isConfirmed = confirmedForkIds.includes(candidate.id);
+                return (
+                  <li key={candidate.id} className="rounded-md border border-border bg-muted/30 p-3">
+                    <p className="text-sm font-semibold">{candidate.title}</p>
+                    <p className="text-sm text-muted-foreground">{candidate.rationale}</p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="mt-2"
+                      disabled={isConfirmed}
+                      onClick={() => setConfirmedForkIds((current) => [...current, candidate.id])}
+                    >
+                      {isConfirmed ? "Fork created (mock)" : "Create fork"}
+                    </Button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
 
       <SubfeaturePanel
         subfeatures={fixture.subfeatures}
@@ -208,12 +227,12 @@ export function FeatureWorkspace({ companyId, projectId, featureId, uiState }: F
       />
 
       <div className="flex flex-wrap gap-2">
-        <Link href="/inbox" className="dashboard-nav-link px-3 py-2 text-sm">
-          Open Inbox references
-        </Link>
-        <Link href={`/projects/${projectId}`} className="dashboard-nav-link px-3 py-2 text-sm">
-          Return to project dashboard
-        </Link>
+        <Button variant="outline" asChild>
+          <Link href="/inbox">Open Inbox references</Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href={`/projects/${projectId}`}>Return to project dashboard</Link>
+        </Button>
       </div>
 
       <VoteRequestModal
