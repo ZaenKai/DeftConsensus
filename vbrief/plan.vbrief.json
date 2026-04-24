@@ -1,0 +1,64 @@
+{
+  "vBRIEFInfo": {
+    "version": "0.6",
+    "description": "Planning and strategy chaining state for deftConsensus."
+  },
+  "plan": {
+    "title": "deftConsensus planning",
+    "status": "draft",
+    "metadata": {
+      "completedStrategies": [
+        {
+          "name": "discuss",
+          "runCount": 6,
+          "artifacts": [
+            "specs/discussions/landing-page-context.md",
+            "specs/discussions/landing-page-context-run-2.md",
+            "specs/discussions/landing-page-context-run-3.md",
+            "specs/discussions/brand-guide-context-run-4.md",
+            "specs/discussions/dashboard-context.md",
+            "specs/discussions/feature-page-context.md"
+          ]
+        },
+        {
+          "name": "map",
+          "runCount": 1,
+          "artifacts": [
+            ".planning/codebase/STACK.md",
+            ".planning/codebase/ARCHITECTURE.md",
+            ".planning/codebase/CONVENTIONS.md",
+            ".planning/codebase/CONCERNS.md"
+          ]
+        }
+      ],
+      "artifacts": [
+        "specs/discussions/landing-page-context.md",
+        "specs/discussions/landing-page-context-run-2.md",
+        "specs/discussions/landing-page-context-run-3.md",
+        "specs/discussions/brand-guide-context-run-4.md",
+        "specs/discussions/dashboard-context.md",
+        "specs/discussions/feature-page-context.md",
+        ".planning/codebase/STACK.md",
+        ".planning/codebase/ARCHITECTURE.md",
+        ".planning/codebase/CONVENTIONS.md",
+        ".planning/codebase/CONCERNS.md"
+      ]
+    },
+    "items": [
+      {
+        "id": "slack-integration-revisit",
+        "title": "Revisit Slack integration after Phase 1 frontend isolation is complete",
+        "status": "pending",
+        "narrative": {
+          "Context": "Slack integration ideation is feasible but intentionally deferred while Phase 1 remains frontend-only with mock data and no live integrations.",
+          "FeasibilitySnapshot": "Validated capabilities include channel creation (conversations.create), stakeholder invites (conversations.invite), intro messaging (chat.postMessage), PDF brief upload via upload-v2 flow (files.getUploadURLExternal + files.completeUploadExternal), and pinning key context via pinned messages.",
+          "OperationalConstraints": "Channel hard-delete is generally an Enterprise Admin path (admin.conversations.delete); default lifecycle should prefer archive/unarchive for broad compatibility. Workspace policies may block create/invite/pin actions (restricted_action/no_permission). Stakeholder identity mapping must resolve internal users to Slack user IDs reliably.",
+          "SecurityAndGovernance": "Use least-privilege scopes, explicit per-company/project enablement, and auditable event logs for channel lifecycle actions and membership changes.",
+          "RevisitTriggers": "Start detailed planning when Phase 1 route/page work is accepted, integration policy is opened for Phase 2, and target workspace permissions/scopes are confirmed.",
+          "DecisionChecklist": "Decide integration mode (notify-only vs collaboration channel), channel naming convention, lifecycle policy (create trigger and archive/delete behavior), stakeholder mapping source of truth, fallback behavior for permission errors, and moderation/retention requirements.",
+          "SuccessCriteria": "A selected Slack mode can be enabled per tenant with predictable lifecycle behavior, graceful handling of permission boundaries, and clear traceability from feature status changes to Slack actions."
+        }
+      }
+    ]
+  }
+}

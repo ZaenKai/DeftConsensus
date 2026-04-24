@@ -21,4 +21,9 @@
 /.agents
 /.planning
 /deft
-/vbrief
+
+# Migration backups (created by `task migrate:vbrief`) -- do NOT commit.
+# Post-commit, pre-migration state is recoverable via git history; see
+# deft/main.md § Safety flags for the post-commit recovery path.
+*.premigrate.md
+*.premigrate.vbrief.json

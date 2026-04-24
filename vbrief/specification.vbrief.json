@@ -1,0 +1,319 @@
+{
+  "vBRIEFInfo": {
+    "version": "0.6",
+    "description": "Light-path specification source for deftConsensus feature detail collaboration workflows."
+  },
+  "plan": {
+    "title": "deftConsensus Feature Page SPECIFICATION",
+    "status": "approved",
+    "narratives": {
+      "Overview": "Build the Phase 1 feature detail experience for deftConsensus with a two-pane brief/chat workflow, immutable original brief retention, governed AI-assisted in-progress updates, section-level voting, and parent/subfeature decomposition controls, all powered by centralized mock data.",
+      "Architecture": "Use a nested Next.js App Router route (`companies/[companyId]/projects/[projectId]/features/[featureId]`) within the authenticated shell. The page composes a brief workspace (Original + In Progress), threaded chat surface, voting actions, and fork suggestions, backed by typed mock contracts for brief versions, votes, governance settings, and subfeature relationships. Governance settings resolve as company defaults with project overrides.",
+      "Requirements": "FR-1: Feature detail route MUST be `companies/[companyId]/projects/[projectId]/features/[featureId]`. FR-2: Feature page MUST provide back navigation to project dashboard and visible hierarchy context in the header. FR-3: Desktop layout MUST use two panes (Brief left, Chat right); smaller breakpoints MUST use an accessible stacked/tabbed pattern. FR-4: Chat header MUST show participant avatars, compact after three users, and provide participant list + invite affordance. FR-5: Chat messages MUST render others left/current user right and support threaded replies. FR-6: Brief workspace MUST expose exactly two views: `Original` and `In Progress`. FR-7: Original brief MUST be immutable and persist as baseline snapshot. FR-8: In-progress brief MUST show AI provenance markers for updated sections and update timestamps. FR-9: AI updates MUST follow hybrid governance: low-risk wording/clarity edits auto-apply, structural or scope-changing edits require explicit approval. FR-10: Chat composer MUST include a Propose Vote shortcut that captures concise brief-change completion requests. FR-11: Voting MUST support section-level targets. FR-12: Voting model and thresholds MUST be configurable in settings with company-level defaults and project-level overrides. FR-13: Parent features MUST support decomposition into subfeatures; split should be system-suggested at complexity thresholds and require human confirmation. FR-14: Parent feature completion MUST require all required subfeatures complete; optional subfeatures may remain open. FR-15: System MUST auto-suggest forked brief requests for out-of-scope content, requiring user confirmation to create the fork. FR-16: Feature page MUST include explicit default/loading/empty/error states for both panes and key interactions. FR-17: All content/state in Phase 1 MUST use centralized mock data contracts only. NFR-1: Meet WCAG 2.1 AA baseline for keyboard navigation, focus visibility, landmarks, and contrast. NFR-2: Ensure responsive behavior across mobile/tablet/desktop with preserved collaboration usability. NFR-3: Use semantic design tokens and avoid hard-coded visual values without explicit justification. NFR-4: Add automated tests for route context, governance gating, section-level voting, subfeature logic, and fork suggestion flows."
+    },
+    "metadata": {
+      "artifacts": [
+        "specs/discussions/brand-guide-context-run-4.md",
+        "specs/discussions/dashboard-context.md",
+        "specs/discussions/feature-page-context.md"
+      ]
+    },
+    "items": [
+      {
+        "id": "phase-1",
+        "title": "Phase 1: Data contracts and governance baselines",
+        "status": "pending",
+        "subItems": [
+          {
+            "id": "phase-1.1",
+            "title": "Subphase 1.1: Route and feature-domain contracts",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-1.1.1",
+                "title": "Define route context and typed feature entities in centralized mock modules",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "none",
+                  "Acceptance": "Mock contracts cover company/project/feature identity, participants, brief sections, chat threads, and metadata.",
+                  "Traces": "FR-1, FR-17, NFR-3"
+                }
+              },
+              {
+                "id": "phase-1.1.2",
+                "title": "Model brief versions and section provenance for Original and In Progress views",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-1.1.1",
+                  "Acceptance": "Original is immutable; In Progress supports section-level provenance and timestamped updates.",
+                  "Traces": "FR-6, FR-7, FR-8"
+                }
+              }
+            ]
+          },
+          {
+            "id": "phase-1.2",
+            "title": "Subphase 1.2: Governance and decomposition contracts",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-1.2.1",
+                "title": "Define governance settings model with company defaults and project overrides",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-1.1.1",
+                  "Acceptance": "Voting thresholds/models resolve deterministically with project override precedence.",
+                  "Traces": "FR-12, NFR-4"
+                }
+              },
+              {
+                "id": "phase-1.2.2",
+                "title": "Define subfeature split-threshold and required/optional completion models",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-1.1.1",
+                  "Acceptance": "Parent/subfeature relationships encode split suggestions and required/optional completion semantics.",
+                  "Traces": "FR-13, FR-14, NFR-4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "phase-2",
+        "title": "Phase 2: Feature page shell and interaction layout",
+        "status": "pending",
+        "subItems": [
+          {
+            "id": "phase-2.1",
+            "title": "Subphase 2.1: Header and responsive pane composition",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-2.1.1",
+                "title": "Implement feature header with context breadcrumbing and project-dashboard return action",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-1.1.1",
+                  "Acceptance": "Header consistently exposes company/project/feature context and explicit return path.",
+                  "Traces": "FR-2, FR-1"
+                }
+              },
+              {
+                "id": "phase-2.1.2",
+                "title": "Implement two-pane desktop layout with accessible stacked or tabbed mobile adaptation",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-2.1.1",
+                  "Acceptance": "Brief and chat remain usable across breakpoints with preserved keyboard navigation.",
+                  "Traces": "FR-3, NFR-1, NFR-2"
+                }
+              }
+            ]
+          },
+          {
+            "id": "phase-2.2",
+            "title": "Subphase 2.2: Participant and chat presentation",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-2.2.1",
+                "title": "Implement participant avatar row with compact overflow and invite/list actions",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-2.1.2",
+                  "Acceptance": "Top-of-chat participant state is visible, compact, and actionable.",
+                  "Traces": "FR-4, NFR-2"
+                }
+              },
+              {
+                "id": "phase-2.2.2",
+                "title": "Implement aligned chat message rendering and threaded reply affordances",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-2.1.2",
+                  "Acceptance": "Chat clearly distinguishes sender perspective and supports reply threading.",
+                  "Traces": "FR-5, NFR-1"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "phase-3",
+        "title": "Phase 3: Brief workspace and decision flows",
+        "status": "pending",
+        "subItems": [
+          {
+            "id": "phase-3.1",
+            "title": "Subphase 3.1: Original and In Progress brief behavior",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-3.1.1",
+                "title": "Implement dual-view brief workspace with immutable Original and governed In Progress editing",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-1.1.2, phase-2.1.2",
+                  "Acceptance": "Users can compare original baseline and current in-progress content without data loss.",
+                  "Traces": "FR-6, FR-7, FR-9"
+                }
+              },
+              {
+                "id": "phase-3.1.2",
+                "title": "Render section-level provenance markers and AI update metadata in In Progress",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-3.1.1",
+                  "Acceptance": "Every AI-touched section shows origin and timestamp context.",
+                  "Traces": "FR-8, NFR-4"
+                }
+              }
+            ]
+          },
+          {
+            "id": "phase-3.2",
+            "title": "Subphase 3.2: Vote initiation and section-level governance",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-3.2.1",
+                "title": "Implement Propose Vote chat shortcut and minimal request capture modal",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-2.2.2",
+                  "Acceptance": "Users can initiate vote requests from chat without leaving feature context.",
+                  "Traces": "FR-10, FR-16"
+                }
+              },
+              {
+                "id": "phase-3.2.2",
+                "title": "Implement section-targeted voting state and governance rule resolution",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-1.2.1, phase-3.1.2, phase-3.2.1",
+                  "Acceptance": "Vote eligibility and outcomes resolve per section using configured company/project rules.",
+                  "Traces": "FR-11, FR-12, NFR-4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "phase-4",
+        "title": "Phase 4: Scope control and feature decomposition behavior",
+        "status": "pending",
+        "subItems": [
+          {
+            "id": "phase-4.1",
+            "title": "Subphase 4.1: Fork suggestion and out-of-scope handling",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-4.1.1",
+                "title": "Implement out-of-scope detection surfaces and fork suggestion prompts requiring user confirmation",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-3.1.2",
+                  "Acceptance": "System suggests, but does not auto-create, forked brief requests for scope drift.",
+                  "Traces": "FR-15, FR-16"
+                }
+              }
+            ]
+          },
+          {
+            "id": "phase-4.2",
+            "title": "Subphase 4.2: Parent/subfeature orchestration",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-4.2.1",
+                "title": "Implement system-suggested split prompts at complexity thresholds with explicit user confirmation",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-1.2.2",
+                  "Acceptance": "Complex parent features trigger split suggestions without forced automatic decomposition.",
+                  "Traces": "FR-13, NFR-4"
+                }
+              },
+              {
+                "id": "phase-4.2.2",
+                "title": "Implement parent completion logic using required-vs-optional subfeature semantics",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-1.2.2, phase-4.2.1",
+                  "Acceptance": "Parent completion status follows required subfeature completion while optional work can remain open.",
+                  "Traces": "FR-14, NFR-4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "phase-5",
+        "title": "Phase 5: Accessibility, state hardening, and verification",
+        "status": "pending",
+        "subItems": [
+          {
+            "id": "phase-5.1",
+            "title": "Subphase 5.1: UI states and accessibility baseline",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-5.1.1",
+                "title": "Add explicit default/loading/empty/error state coverage across brief, chat, vote, and fork flows",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-4.2.2",
+                  "Acceptance": "All major interactions have resilient fallback states without ambiguous behavior.",
+                  "Traces": "FR-16, NFR-2"
+                }
+              },
+              {
+                "id": "phase-5.1.2",
+                "title": "Validate keyboard navigation, focus management, semantics, and contrast across pane workflows",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-5.1.1",
+                  "Acceptance": "Feature page meets WCAG 2.1 AA baseline for implemented interactions.",
+                  "Traces": "NFR-1, NFR-3"
+                }
+              }
+            ]
+          },
+          {
+            "id": "phase-5.2",
+            "title": "Subphase 5.2: Automated tests and quality gate",
+            "status": "pending",
+            "subItems": [
+              {
+                "id": "phase-5.2.1",
+                "title": "Add tests for route context, AI governance gating, section-level vote rules, decomposition logic, and fork suggestions",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-5.1.2",
+                  "Acceptance": "Test suite covers locked collaboration/governance behavior and key regressions.",
+                  "Traces": "FR-1, FR-9, FR-11, FR-12, FR-13, FR-14, FR-15, NFR-4"
+                }
+              },
+              {
+                "id": "phase-5.2.2",
+                "title": "Run lint/test/build quality gate and validate requirement traceability",
+                "status": "pending",
+                "narrative": {
+                  "Dependencies": "phase-5.2.1",
+                  "Acceptance": "Quality checks pass and implementation maps to FR-1..FR-17 and NFR-1..NFR-4.",
+                  "Traces": "FR-1, FR-2, FR-3, FR-4, FR-5, FR-6, FR-7, FR-8, FR-9, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-16, FR-17, NFR-1, NFR-2, NFR-3, NFR-4"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
